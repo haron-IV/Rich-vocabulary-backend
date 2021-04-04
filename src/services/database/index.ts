@@ -5,7 +5,7 @@ class Database {
   private databaseFilePath
 
   constructor(name = 'database') {
-    this.databaseFilePath = `${process.cwd()}/src/database/${name}.json`
+    this.databaseFilePath = `${process.cwd()}/database/${name}.json`
   }
 
   private getDatabase = (): DatabaseInterface =>
@@ -25,7 +25,7 @@ class Database {
     return Boolean(foundWord)
   }
 
-  addWord = (word: Word) => {
+  addWord = (word: Word): void => {
     const db = this.getDatabase()
     const isWordExist = this.checkIfWordExist(db.dictionary, word)
     if (isWordExist) {
