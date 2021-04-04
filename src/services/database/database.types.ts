@@ -1,9 +1,4 @@
-export interface Word {
-  firstLanguage: string
-  secondLanguage: string
-  description?: string
-  img?: string
-}
+import { Word } from '../../shared/types'
 
 export interface Database {
   name: string
