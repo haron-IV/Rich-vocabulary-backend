@@ -45,6 +45,21 @@ class WordService extends DatabaseService {
       this.error.badRequest(response, err)
     }
   }
+
+  public removeWordById = (body: any, response: any): void => {
+    try {
+      const db = this.getDatabase()
+      const removedWord = db.dictionary.find(word => word.id === body.id)
+      const filteredDictionary = db.dictionary.filter(
+        word => word.id !== body.id
+      )
+      db.dictionary = filteredDictionary
+      this.saveDatabase(db)
+      response.status(200).json(removedWord)
+    } catch (err) {
+      this.error.badRequest(response, err)
+    }
+  }
 }
 
 export default WordService

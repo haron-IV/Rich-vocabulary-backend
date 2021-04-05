@@ -13,6 +13,10 @@ class WordController {
     this.router.get('/get-words', async (_, res) => {
       this.word.getWords(res)
     })
+
+    this.router.delete('/delete', async ({ body }, res) => {
+      this.word.removeWordById(body, res)
+    })
   }
 }
 
