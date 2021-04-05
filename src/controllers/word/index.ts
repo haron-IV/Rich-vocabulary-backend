@@ -1,6 +1,8 @@
 import { Router } from 'express'
-import WordService from '../../services/word/service.js'
+import ErrorService from '../../services/error/index.js'
+import WordService from '../../services/word/index.js'
 
+const error = new ErrorService()
 class WordController {
   router = Router()
   word = new WordService()
@@ -11,7 +13,10 @@ class WordController {
         this.word.addWord(body)
         res.status(200).json(`Word added.`)
       } catch (err) {
-        res.status(400).json(err)
+        error.resourceExist(
+          res,
+          `${body.firstLanguage} : ${body.secondLanguage} - Word exist.`
+        )
       }
     })
   }

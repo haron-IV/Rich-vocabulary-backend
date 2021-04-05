@@ -1,5 +1,6 @@
 import { Word } from '../../shared/types/services.js'
 import DatabaseService from '../database/index.js'
+import { v4 as uuid } from 'uuid'
 
 class WordService extends DatabaseService {
   private checkIfWordExist = (dictionary: Word[], word: Word) => {
@@ -20,6 +21,7 @@ class WordService extends DatabaseService {
         `Word: ${word.firstLanguage} - ${word.secondLanguage} exist.`
       )
     }
+    word.id = uuid()
     db.dictionary.push(word)
     this.saveDatabase(db)
   }
