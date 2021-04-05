@@ -1,4 +1,4 @@
-import { Word } from '../../shared/types/services.js'
+import { Id, Word } from '../../shared/types/index.js'
 import DatabaseService from '../database/index.js'
 import { v4 as uuid } from 'uuid'
 import ErrorService from '../error/index.js'
@@ -46,7 +46,20 @@ class WordService extends DatabaseService {
     }
   }
 
-  public removeWordById = (body: any, response: any): void => {
+  public getWordById = (body: Id, response: any): void => {
+    try {
+      const { dictionary } = this.getDatabase()
+      const foundWord = dictionary.find(word => word.id === body.id)
+      response.status(200).json(foundWord)
+    } catch (err) {
+      this.error.resourceDoNotExist(
+        response,
+        `Word with id: ${body.id} does not exist.`
+      )
+    }
+  }
+
+  public removeWordById = (body: Id, response: any): void => {
     try {
       const db = this.getDatabase()
       const removedWord = db.dictionary.find(word => word.id === body.id)
