@@ -1,10 +1,13 @@
 import { Router } from 'express'
+import DatabaseService from '../../services/database/index.js'
 
 class DatabaseController {
   router = Router()
+  database = new DatabaseService()
+
   constructor() {
-    this.router.get('/test', async (req, res) => {
-      res.status(200).json({ test: 'done' })
+    this.router.get('/backup', async (req, res) => {
+      this.database.backup(res)
     })
   }
 }

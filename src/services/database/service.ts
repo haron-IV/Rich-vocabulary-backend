@@ -1,7 +1,9 @@
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
+import ErrorService from '../error/index.js'
 import { Database as DatabaseInterface } from './database.types'
 
 class DatabaseService {
+  error = new ErrorService()
   public databaseName = 'database'
   private databaseFilePath = `${process.cwd()}/database/database.json` // TODO: make database switchable
   private databaseTemplateFilePath = `${process.cwd()}/database/database-template.json`
@@ -38,6 +40,20 @@ class DatabaseService {
 
   public saveDatabase = (database: DatabaseInterface): void => {
     writeFileSync(this.databaseFilePath, JSON.stringify(database))
+  }
+
+  public backup = (response: any) => {
+    try {
+      const db = this.getDatabase()
+      const date = new Date()
+      const backupPath = `${
+        this.databaseFilePath.split(`.json`)[0]
+      }_${date.getDate()}-${date.getMonth()}-${date.getFullYear()}-${date.getTime()}.json`
+      writeFileSync(backupPath, JSON.stringify(db))
+      response.status(200).json(`Backup made in: ${backupPath}`)
+    } catch (err) {
+      this.error.badRequest(response, 'Backup did not made.')
+    }
   }
 }
 
