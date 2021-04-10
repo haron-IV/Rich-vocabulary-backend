@@ -55,6 +55,8 @@ class DatabaseService {
       this.error.badRequest(response, 'Backup did not made.')
     }
   }
+
+  public debug = () => {}
 }
 
 export default DatabaseService

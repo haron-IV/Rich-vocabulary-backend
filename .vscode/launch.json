@@ -13,6 +13,7 @@
       ],
       "program": "${workspaceFolder}/src/index.ts",
       "preLaunchTask": "tsc: build - tsconfig.json",
+      "runtimeExecutable": "/home/bart/.nvm/versions/node/v15.14.0/bin/node",
       "outFiles": [
         "${workspaceFolder}/dist/**/*.js"
       ]

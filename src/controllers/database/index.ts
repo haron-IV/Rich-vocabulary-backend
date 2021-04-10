@@ -9,6 +9,10 @@ class DatabaseController {
     this.router.get('/backup', async (req, res) => {
       this.database.backup(res)
     })
+
+    this.router.get('/debug', async (req, res) => {
+      this.database.debug()
+    })
   }
 }
 
