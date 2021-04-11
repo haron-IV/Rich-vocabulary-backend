@@ -1,3 +1,4 @@
+import { Response } from 'express'
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import ErrorService from '../error/index.js'
 import { Database as DatabaseInterface } from './database.types'
@@ -42,7 +43,7 @@ class DatabaseService {
     writeFileSync(this.databaseFilePath, JSON.stringify(database))
   }
 
-  public backup = (response: any) => {
+  public backup = (response: Response<unknown>): void => {
     try {
       const db = this.getDatabase()
       const date = new Date()

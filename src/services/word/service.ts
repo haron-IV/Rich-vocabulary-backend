@@ -2,6 +2,7 @@ import { Id, Word } from '../../shared/types/index.js'
 import DatabaseService from '../database/index.js'
 import { v4 as uuid } from 'uuid'
 import ErrorService from '../error/index.js'
+import { Response } from 'express'
 
 class WordService extends DatabaseService {
   error = new ErrorService()
@@ -16,7 +17,7 @@ class WordService extends DatabaseService {
     return Boolean(foundWord)
   }
 
-  public addWord = (word: Word, response: any): void => {
+  public addWord = (word: Word, response: Response<unknown>): void => {
     try {
       const db = this.getDatabase()
       const isWordExist = this.checkIfWordExist(db.dictionary, word)
@@ -24,9 +25,13 @@ class WordService extends DatabaseService {
         throw new Error(
           `Word: ${word.firstLanguage} - ${word.secondLanguage} exist.`
         )
+      const newWord = {
+        ...word,
+        id: uuid(),
+        learned: false,
+      }
 
-      word.id = uuid()
-      db.dictionary.push(word)
+      db.dictionary.push(newWord)
       this.saveDatabase(db)
       response.status(200).json(`Word added.`)
     } catch (err) {
@@ -37,7 +42,7 @@ class WordService extends DatabaseService {
     }
   }
 
-  public getWords = (response: any): void => {
+  public getWords = (response: Response<unknown>): void => {
     try {
       const { dictionary } = this.getDatabase()
       response.status(200).json(dictionary)
@@ -46,7 +51,7 @@ class WordService extends DatabaseService {
     }
   }
 
-  public getWordById = (body: Id, response: any): void => {
+  public getWordById = (body: Id, response: Response<unknown>): void => {
     try {
       const { dictionary } = this.getDatabase()
       const foundWord = dictionary.find(word => word.id === body.id)
@@ -59,7 +64,7 @@ class WordService extends DatabaseService {
     }
   }
 
-  public removeWordById = (body: Id, response: any): void => {
+  public removeWordById = (body: Id, response: Response<unknown>): void => {
     try {
       const db = this.getDatabase()
       const removedWord = db.dictionary.find(word => word.id === body.id)

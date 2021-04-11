@@ -1,6 +1,8 @@
+import { Response } from 'express'
+
 class ErrorService {
   private responseError = (
-    response: any,
+    response: Response<unknown>,
     statusCode: number,
     message: string,
     details?: string
@@ -11,15 +13,21 @@ class ErrorService {
     })
   }
 
-  public resourceExist = (response: any, details?: string): void => {
+  public resourceExist = (
+    response: Response<unknown>,
+    details?: string
+  ): void => {
     this.responseError(response, 409, 'Resource exist.', details)
   }
 
-  public resourceDoNotExist = (response: any, details?: string): void => {
+  public resourceDoNotExist = (
+    response: Response<unknown>,
+    details?: string
+  ): void => {
     this.responseError(response, 404, 'Resource do not exist.', details)
   }
 
-  public badRequest = (response: any, details?: string): void => {
+  public badRequest = (response: Response<unknown>, details?: string): void => {
     this.responseError(response, 400, 'Bad request.', details)
   }
 }
