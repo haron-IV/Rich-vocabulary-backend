@@ -21,6 +21,10 @@ class WordController {
     this.router.get('/by-id', async ({ body }, res) => {
       this.word.getWordById(body, res)
     })
+
+    this.router.get('/count', async (_, res) => {
+      this.word.getWordsCount(res)
+    })
   }
 }
 

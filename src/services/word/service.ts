@@ -78,6 +78,12 @@ class WordService extends DatabaseService {
       this.error.badRequest(response, err)
     }
   }
+
+  public getWordsCount = (response: Response<unknown>): void => {
+    // TODO: end this: error handling etc
+    const db = this.getDatabase()
+    response.status(200).json({ wordsCount: db.dictionary.length })
+  }
 }
 
 export default WordService
