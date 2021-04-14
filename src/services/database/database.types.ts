@@ -5,4 +5,5 @@ export interface Database {
   firstLanguage: string
   secondLanguage: string
   dictionary: Word[]
+  dictionaryLength: number
 }

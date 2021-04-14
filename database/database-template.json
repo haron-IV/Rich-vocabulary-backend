@@ -2,5 +2,6 @@
   "name": "default_database",
   "firstLanguage": "english",
   "secondLanguage": "polish",
+  "dictionaryLength": 0,
   "dictionary": []
 }

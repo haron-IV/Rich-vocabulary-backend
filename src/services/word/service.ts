@@ -22,7 +22,8 @@ class WordService extends DatabaseService {
       const db = this.getDatabase()
       const isWordExist = this.checkIfWordExist(db.dictionary, word)
       if (isWordExist)
-        throw new Error(
+        return this.error.resourceExist(
+          response,
           `Word: ${word.firstLanguage} - ${word.secondLanguage} exist.`
         )
       const newWord = {
@@ -32,6 +33,7 @@ class WordService extends DatabaseService {
       }
 
       db.dictionary.push(newWord)
+      db.dictionaryLength++
       this.saveDatabase(db)
       response.status(200).json(`Word added.`)
     } catch (err) {
@@ -68,10 +70,18 @@ class WordService extends DatabaseService {
     try {
       const db = this.getDatabase()
       const removedWord = db.dictionary.find(word => word.id === body.id)
+      if (!removedWord)
+        return this.error.resourceDoNotExist(
+          response,
+          `Word with id: ${body.id} doesn't exist`
+        )
+
       const filteredDictionary = db.dictionary.filter(
         word => word.id !== body.id
       )
+
       db.dictionary = filteredDictionary
+      db.dictionaryLength--
       this.saveDatabase(db)
       response.status(200).json(removedWord)
     } catch (err) {
@@ -79,10 +89,13 @@ class WordService extends DatabaseService {
     }
   }
 
-  public getWordsCount = (response: Response<unknown>): void => {
-    // TODO: end this: error handling etc
-    const db = this.getDatabase()
-    response.status(200).json({ wordsCount: db.dictionary.length })
+  public getDictionaryLength = (response: Response<unknown>): void => {
+    try {
+      const db = this.getDatabase()
+      response.status(200).json({ dictionaryLength: db.dictionaryLength })
+    } catch (err) {
+      this.error.badRequest(response, err)
+    }
   }
 }
 

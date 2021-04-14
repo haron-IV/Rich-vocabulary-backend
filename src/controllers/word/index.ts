@@ -14,7 +14,7 @@ class WordController {
       this.word.getWords(res)
     })
 
-    this.router.delete('/delete', async ({ body }, res) => {
+    this.router.delete('/by-id', async ({ body }, res) => {
       this.word.removeWordById(body, res)
     })
 
@@ -23,7 +23,7 @@ class WordController {
     })
 
     this.router.get('/count', async (_, res) => {
-      this.word.getWordsCount(res)
+      this.word.getDictionaryLength(res)
     })
   }
 }
