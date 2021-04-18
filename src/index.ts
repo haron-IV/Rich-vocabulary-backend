@@ -15,14 +15,3 @@ app.use(cors())
 app.listen(2200, () => {
   registerRoutes(app)
 })
-
-// import Database from './services/database/index.js'
-
-// const db = new Database()
-
-// db.addWord({
-//   firstLanguage: 'Yellow',
-//   secondLanguage: 'żółty',
-//   description: 'kolor żółty',
-//   img: '',
-// })

@@ -1,6 +1,7 @@
 import express from 'express'
 import DatabaseController from './database/index.js'
 import WordController from './word/index.js'
+import CollectionController from './collection/index.js'
 
 interface Routes {
   path: string
@@ -15,6 +16,10 @@ const routes: Routes[] = [
   {
     path: '/word',
     route: new WordController().router,
+  },
+  {
+    path: '/collection',
+    route: new CollectionController().router,
   },
 ]
 

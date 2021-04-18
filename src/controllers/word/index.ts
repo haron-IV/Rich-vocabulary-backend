@@ -15,11 +15,11 @@ class WordController {
     })
 
     this.router.delete('/by-id', async ({ body }, res) => {
-      this.word.removeWordById(body, res)
+      this.word.removeWordById(body.id, res)
     })
 
     this.router.get('/by-id', async ({ body }, res) => {
-      this.word.getWordById(body, res)
+      this.word.getWordById(body.id, res)
     })
 
     this.router.get('/count', async (_, res) => {

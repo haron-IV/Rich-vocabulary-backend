@@ -1,9 +1,17 @@
-import { Word } from '../../shared/types'
+import { Id, Word } from '../../shared/types'
 
 export interface Database {
   name: string
   firstLanguage: string
   secondLanguage: string
-  dictionary: Word[]
   dictionaryLength: number
+  dictionary: Word[]
+  collections: Collection[]
+}
+
+export interface Collection {
+  id: string
+  name: string
+  collectionLength: number
+  words: Id[]
 }

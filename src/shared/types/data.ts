@@ -1,7 +1,7 @@
-export interface Id {
-  id: string
-}
-export interface Word extends Id {
+export type Id = string
+
+export interface Word {
+  id: Id
   firstLanguage: string
   secondLanguage: string
   description?: string

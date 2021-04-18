@@ -53,32 +53,30 @@ class WordService extends DatabaseService {
     }
   }
 
-  public getWordById = (body: Id, response: Response<unknown>): void => {
+  public getWordById = (id: Id, response: Response<unknown>): void => {
     try {
       const { dictionary } = this.getDatabase()
-      const foundWord = dictionary.find(word => word.id === body.id)
+      const foundWord = dictionary.find(word => word.id === id)
       response.status(200).json(foundWord)
     } catch (err) {
       this.error.resourceDoNotExist(
         response,
-        `Word with id: ${body.id} does not exist.`
+        `Word with id: ${id} does not exist.`
       )
     }
   }
 
-  public removeWordById = (body: Id, response: Response<unknown>): void => {
+  public removeWordById = (id: Id, response: Response<unknown>): void => {
     try {
       const db = this.getDatabase()
-      const removedWord = db.dictionary.find(word => word.id === body.id)
+      const removedWord = db.dictionary.find(word => word.id === id)
       if (!removedWord)
         return this.error.resourceDoNotExist(
           response,
-          `Word with id: ${body.id} doesn't exist`
+          `Word with id: ${id} doesn't exist`
         )
 
-      const filteredDictionary = db.dictionary.filter(
-        word => word.id !== body.id
-      )
+      const filteredDictionary = db.dictionary.filter(word => word.id !== id)
 
       db.dictionary = filteredDictionary
       db.dictionaryLength--
