@@ -1,5 +1,5 @@
 import { Id, Word } from '../../shared/types/index.js'
-import DatabaseService from '../database/index.js'
+import DatabaseService, { Database } from '../database/index.js'
 import { v4 as uuid } from 'uuid'
 import ErrorService from '../error/index.js'
 import { Response } from 'express'
@@ -15,6 +15,14 @@ class WordService extends DatabaseService {
     )
 
     return Boolean(foundWord)
+  }
+
+  private decreaseDictionaryCount = (db: Database) => {
+    db.dictionaryLength--
+  }
+
+  private increaseDictionaryCount = (db: Database) => {
+    db.dictionaryLength++
   }
 
   public addWord = (word: Word, response: Response<unknown>): void => {
@@ -33,7 +41,7 @@ class WordService extends DatabaseService {
       }
 
       db.dictionary.push(newWord)
-      db.dictionaryLength++
+      this.increaseDictionaryCount(db)
       this.saveDatabase(db)
       response.status(200).json(`Word added.`)
     } catch (err) {
@@ -79,7 +87,7 @@ class WordService extends DatabaseService {
       const filteredDictionary = db.dictionary.filter(word => word.id !== id)
 
       db.dictionary = filteredDictionary
-      db.dictionaryLength--
+      this.decreaseDictionaryCount(db)
       this.saveDatabase(db)
       response.status(200).json(removedWord)
     } catch (err) {
@@ -91,6 +99,34 @@ class WordService extends DatabaseService {
     try {
       const db = this.getDatabase()
       response.status(200).json({ dictionaryLength: db.dictionaryLength })
+    } catch (err) {
+      this.error.badRequest(response, err)
+    }
+  }
+
+  public markWordAsLearned = (id: Id, response: Response<unknown>): void => {
+    try {
+      const db = this.getDatabase()
+      const { dictionary } = db
+
+      const learnedWord = dictionary.find(word =>
+        word.id === id ? word : null
+      )
+      if (!learnedWord)
+        return this.error.resourceDoNotExist(
+          response,
+          `Word with id "${id} doesn't exist."`
+        )
+
+      learnedWord.learned = true
+      db.dictionary = dictionary.filter(word =>
+        word.id === learnedWord?.id ? null : word
+      )
+      this.decreaseDictionaryCount(db)
+      db.learned.push(learnedWord)
+
+      this.saveDatabase(db)
+      response.status(200).json(`Word correctly marked as learned.`)
     } catch (err) {
       this.error.badRequest(response, err)
     }

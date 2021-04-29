@@ -25,6 +25,10 @@ class WordController {
     this.router.get('/count', async (_, res) => {
       this.word.getDictionaryLength(res)
     })
+
+    this.router.post('/mark-as-learned', async ({ body }, res) => {
+      this.word.markWordAsLearned(body.id, res)
+    })
   }
 }
 
