@@ -7,6 +7,7 @@ export interface Database {
   dictionaryLength: number
   dictionary: Word[]
   collections: Collection[]
+  learned: Word[]
 }
 
 export interface Collection {
