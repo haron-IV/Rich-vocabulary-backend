@@ -14,8 +14,8 @@ class DatabaseController {
       this.database.debug()
     })
 
-    this.router.post('/create', async (req, res) => {
-      this.database.initDatabase(req)
+    this.router.post('/create', async ({ body }, res) => {
+      this.database.initDatabase(body, res)
     })
   }
 }

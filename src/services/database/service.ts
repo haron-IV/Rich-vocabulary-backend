@@ -21,19 +21,20 @@ class DatabaseService {
     }
   }
 
-  private setDatabase = (name: string) => {
+  public setDatabase = (name: string, response?: Response<unknown>): void => {
+    //TODO: validation, success response
     this.databaseName = name
     this.databaseFilePath = `${process.cwd()}/database/${name}.json`
   }
 
-  public initDatabase = ({
-    name,
-    firstLanguage,
-    secondLanguage = '',
-  }: InitDatabase): void => {
+  public initDatabase = (
+    { name = 'database', firstLanguage, secondLanguage = '' }: InitDatabase,
+    response: Response<unknown>
+  ): void => {
     this.setDatabase(name)
     const databaseExist = this.checkDatabaseExist()
-    if (databaseExist) return
+    if (databaseExist)
+      return this.error.resourceExist(response, 'Database exist')
     const databaseTemplate = this.getDatabaseTemplate()
     const database = {
       ...databaseTemplate,
