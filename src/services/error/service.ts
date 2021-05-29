@@ -14,10 +14,11 @@ class ErrorService {
   }
 
   public resourceExist = (
-    response: Response<unknown>,
+    response?: Response<unknown>,
     details?: string
   ): void => {
-    this.responseError(response, 409, 'Resource exist.', details)
+    if (response) this.responseError(response, 409, 'Resource exist.', details)
+    else console.error(details)
   }
 
   public resourceDoNotExist = (

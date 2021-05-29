@@ -1,7 +1,7 @@
 import { Response } from 'express'
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import ErrorService from '../error/index.js'
-import { Database as DatabaseInterface } from './database.types'
+import { Database as DatabaseInterface, InitDatabase } from './database.types'
 
 class DatabaseService {
   error = new ErrorService()
@@ -12,27 +12,41 @@ class DatabaseService {
   private getDatabaseTemplate = (): DatabaseInterface =>
     JSON.parse(readFileSync(this.databaseTemplateFilePath, 'utf8'))
 
-  private checkDatabaseExist = () => {
+  public checkDatabaseExist = (response?: Response<unknown>) => {
     try {
-      if (existsSync(this.databaseFilePath)) return true
+      if (existsSync(this.databaseFilePath)) {
+        if (response) response.status(200).json({ databaseExist: true })
+        return true
+      }
+      response?.status(200).json({ databaseExist: false })
       return false
     } catch {
+      response?.status(200).json({ databaseExist: false })
       return false
     }
   }
 
-  private setDatabase = (name: string) => {
+  public setDatabase = (name: string, response?: Response<unknown>): void => {
+    //TODO: validation, success response
     this.databaseName = name
     this.databaseFilePath = `${process.cwd()}/database/${name}.json`
   }
 
-  public initDatabase = (name: string): void => {
+  public initDatabase = (
+    { name = 'database', firstLanguage, secondLanguage = '' }: InitDatabase,
+    response: Response<unknown>
+  ): void => {
     this.setDatabase(name)
     const databaseExist = this.checkDatabaseExist()
-    if (databaseExist) return
+    if (databaseExist)
+      return this.error.resourceExist(response, 'Database exist')
     const databaseTemplate = this.getDatabaseTemplate()
-    databaseTemplate.name = name
-    writeFileSync(this.databaseFilePath, JSON.stringify(databaseTemplate))
+    const database = {
+      ...databaseTemplate,
+      name,
+      config: { firstLanguage, secondLanguage },
+    }
+    writeFileSync(this.databaseFilePath, JSON.stringify(database))
     console.log(`New database created with name: ${name}`)
   }
 

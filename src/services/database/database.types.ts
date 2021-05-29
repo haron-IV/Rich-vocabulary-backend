@@ -2,8 +2,10 @@ import { Id, Word } from '../../shared/types'
 
 export interface Database {
   name: string
-  firstLanguage: string
-  secondLanguage: string
+  config: {
+    firstLanguage: string
+    secondLanguage: string
+  }
   dictionaryLength: number
   dictionary: Word[]
   collections: Collection[]
@@ -15,4 +17,10 @@ export interface Collection {
   name: string
   collectionLength: number
   words: Id[]
+}
+
+export interface InitDatabase {
+  name: string
+  firstLanguage: string
+  secondLanguage: string
 }

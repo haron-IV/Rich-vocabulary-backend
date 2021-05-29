@@ -13,6 +13,14 @@ class DatabaseController {
     this.router.get('/debug', async (req, res) => {
       this.database.debug()
     })
+
+    this.router.post('/create', async ({ body }, res) => {
+      this.database.initDatabase(body, res)
+    })
+
+    this.router.get('/check', async (_, res) => {
+      this.database.checkDatabaseExist(res)
+    })
   }
 }
 
