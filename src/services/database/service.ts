@@ -12,11 +12,16 @@ class DatabaseService {
   private getDatabaseTemplate = (): DatabaseInterface =>
     JSON.parse(readFileSync(this.databaseTemplateFilePath, 'utf8'))
 
-  private checkDatabaseExist = () => {
+  public checkDatabaseExist = (response?: Response<unknown>) => {
     try {
-      if (existsSync(this.databaseFilePath)) return true
+      if (existsSync(this.databaseFilePath)) {
+        if (response) response.status(200).json({ databaseExist: true })
+        return true
+      }
+      response?.status(200).json({ databaseExist: false })
       return false
     } catch {
+      response?.status(200).json({ databaseExist: false })
       return false
     }
   }

@@ -17,6 +17,10 @@ class DatabaseController {
     this.router.post('/create', async ({ body }, res) => {
       this.database.initDatabase(body, res)
     })
+
+    this.router.get('/check', async (_, res) => {
+      this.database.checkDatabaseExist(res)
+    })
   }
 }
 
