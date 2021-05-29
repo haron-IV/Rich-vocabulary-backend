@@ -1,7 +1,7 @@
 import { Response } from 'express'
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import ErrorService from '../error/index.js'
-import { Database as DatabaseInterface } from './database.types'
+import { Database as DatabaseInterface, InitDatabase } from './database.types'
 
 class DatabaseService {
   error = new ErrorService()
@@ -26,13 +26,21 @@ class DatabaseService {
     this.databaseFilePath = `${process.cwd()}/database/${name}.json`
   }
 
-  public initDatabase = (name: string): void => {
+  public initDatabase = ({
+    name,
+    firstLanguage,
+    secondLanguage = '',
+  }: InitDatabase): void => {
     this.setDatabase(name)
     const databaseExist = this.checkDatabaseExist()
     if (databaseExist) return
     const databaseTemplate = this.getDatabaseTemplate()
-    databaseTemplate.name = name
-    writeFileSync(this.databaseFilePath, JSON.stringify(databaseTemplate))
+    const database = {
+      ...databaseTemplate,
+      name,
+      config: { firstLanguage, secondLanguage },
+    }
+    writeFileSync(this.databaseFilePath, JSON.stringify(database))
     console.log(`New database created with name: ${name}`)
   }
 
